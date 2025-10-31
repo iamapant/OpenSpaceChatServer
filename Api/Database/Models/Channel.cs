@@ -19,6 +19,8 @@ public class Channel {
     public double Radius { get; set; }
     
     public ICollection<PublicMessage> Messages { get; set; }  = new List<PublicMessage>(); 
+    // public ICollection<PublicArchive> Archives { get; set; }  = new List<PublicArchive>(); 
+    public ICollection<UserTimeout> UserTimeouts { get; set; } = new List<UserTimeout>();
 }
 
 public class ChannelModelCreation : IModelCreationSettings<Channel> {

@@ -6,21 +6,14 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Api.Database.Models;
 
-[Table("FontStyles")]
-public class FontStyle {
+[Table("MessageFrames")]
+public class MessageFrame {
     [Key]
     public Guid Id { get; set; }
-    public int Weight { get; set; }
-    [MaxLength(15)]
-    public string? Style { get; set; }      //Italic, oblique
-    public float SizeInPx { get; set; }
-    public float LetterSpacing { get; set; }
-    public float LineSpacing { get; set; }
-    [MaxLength(50)]
-    public string? TextDecoration { get; set; }
-    [MaxLength(10)]
-    public string? TextTransform  { get; set; }     //Uppercase, lowercase
-    
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    public const string Default = "Default";
     
     public ICollection<UserInfo> UserDefaults { get; set; } = new List<UserInfo>();
     // public ICollection<PrivateMessage> PrivateMessages { get; set; } = new List<PrivateMessage>();
@@ -29,12 +22,9 @@ public class FontStyle {
     public ICollection<PublicArchive> PublicArchives { get; set; } = new List<PublicArchive>();
 }
 
-public class FontStyleModelCreation : IModelCreationSettings<FontStyle> {
-    public void OnModelCreating(EntityTypeBuilder<FontStyle> builder, ModelBuilder mb) {
+public class MessageFrameModelCreation : IModelCreationSettings<MessageFrame> {
+    public void OnModelCreating(EntityTypeBuilder<MessageFrame> builder, ModelBuilder mb) {
         builder.Property(e => e.Id).HasValueGenerator<SequentialGuidValueGenerator>().ValueGeneratedOnAdd();
-        builder.Property(e => e.Weight).HasDefaultValue(400);
-        builder.Property(e => e.SizeInPx).HasDefaultValue(14);
-        builder.Property(e => e.LetterSpacing).HasDefaultValue(0);
-        builder.Property(e => e.LineSpacing).HasDefaultValue(1.2f);
+        builder.HasData(new MessageFrame { Id = Guid.Parse("019a36b6-44a9-7484-9d3a-91c305018ac8"), Name = MessageFrame.Default });
     }
 }

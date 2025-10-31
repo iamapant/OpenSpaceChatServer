@@ -5,17 +5,27 @@ namespace Api.Database;
 
 public class AppDbContext : DbContext {
     public DbSet<Message> Messages { get; set; }
+    public DbSet<MessageFrame> MessageFrames { get; set; }
     public DbSet<MessageFrameOptions> Frames { get; set; }
     public DbSet<MessageReaction> Reactions { get; set; }
     public DbSet<MessageStickerStyle> Stickers { get; set; }
+    public DbSet<PrivateMessage> PrivateMessages { get; set; }
+    public DbSet<PrivateArchive>  PrivateArchives { get; set; }
+    public DbSet<PublicMessage> PublicMessages { get; set; }
+    public DbSet<PublicArchive>  PublicArchives { get; set; }
     public DbSet<Channel> Channels { get; set; }
     public DbSet<FontFamily> FontFamilies { get; set; }
     public DbSet<FontStyle> FontStyles { get; set; }
+    public DbSet<SupportTicket>  SupportTickets { get; set; }
     public DbSet<Inbox> Inboxes { get; set; }
     public DbSet<Landmark> Landmarks { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserBlacklist> Blacklists { get; set; }
+    public DbSet<UserMessageDecoration> DefaultMessageDecorations { get; set; }
     public DbSet<UserTimeout> Timeouts { get; set; }
+    public DbSet<CuratorSettings> CuratorSettings { get; set; }
+    
 
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder) {
@@ -36,8 +46,10 @@ public class AppDbContext : DbContext {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Message>().UseTpcMappingStrategy();
+        modelBuilder.Entity<Message>().UseTptMappingStrategy();
 
         ModelCreationRepository.ApplyAll(modelBuilder);
+
+        ModelCreationRepository.SeedUser(modelBuilder);
     }
 }

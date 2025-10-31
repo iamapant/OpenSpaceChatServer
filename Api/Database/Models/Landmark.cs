@@ -27,6 +27,7 @@ public class Landmark {
     [Required]
     public double Longitude { get; set; }
     public Position Position => new (Latitude, Longitude);
+    public ICollection<Message> Messages { get; set; } = new List<Message>();
 }
 public class LandmarkModelCreation : IModelCreationSettings<Landmark> {
     public void OnModelCreating(EntityTypeBuilder<Landmark> builder, ModelBuilder mb) {

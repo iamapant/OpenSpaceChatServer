@@ -3,6 +3,7 @@ using System;
 using Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251030203540_Relation-Ticket-Font")]
+    partial class RelationTicketFont
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,12 +40,7 @@ namespace Api.Migrations
                     b.Property<double>("Radius")
                         .HasColumnType("double precision");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Channels");
                 });
@@ -480,6 +478,9 @@ namespace Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("InboxId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -504,6 +505,8 @@ namespace Api.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InboxId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -699,21 +702,6 @@ namespace Api.Migrations
                     b.ToTable("ChannelPublicMessage");
                 });
 
-            modelBuilder.Entity("InboxUser", b =>
-                {
-                    b.Property<Guid>("InboxesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UsersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("InboxesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("InboxUser");
-                });
-
             modelBuilder.Entity("MessageStickerStylePrivateArchive", b =>
                 {
                     b.Property<string>("PrivateArchivesId")
@@ -748,10 +736,10 @@ namespace Api.Migrations
                 {
                     b.HasBaseType("Api.Database.Models.Message");
 
-                    b.Property<Guid>("InboxId")
+                    b.Property<Guid>("DmId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("InboxId1")
+                    b.Property<Guid?>("DmId1")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("PinnedDmId")
@@ -840,13 +828,6 @@ namespace Api.Migrations
                     b.ToTable("PublicArchives");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.Channel", b =>
-                {
-                    b.HasOne("Api.Database.Models.User", null)
-                        .WithMany("Channels")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Api.Database.Models.ChannelSetting", b =>
                 {
                     b.HasOne("Api.Database.Models.Channel", "Channel")
@@ -926,6 +907,10 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Database.Models.User", b =>
                 {
+                    b.HasOne("Api.Database.Models.Inbox", null)
+                        .WithMany("Users")
+                        .HasForeignKey("InboxId");
+
                     b.HasOne("Api.Database.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
@@ -1048,21 +1033,6 @@ namespace Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("InboxUser", b =>
-                {
-                    b.HasOne("Api.Database.Models.Inbox", null)
-                        .WithMany()
-                        .HasForeignKey("InboxesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MessageStickerStylePrivateArchive", b =>
                 {
                     b.HasOne("Api.Database.Models.PrivateArchive", null)
@@ -1095,16 +1065,16 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Database.Models.PrivateMessage", b =>
                 {
+                    b.HasOne("Api.Database.Models.Inbox", "Dm")
+                        .WithMany("Messages")
+                        .HasForeignKey("DmId1")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Api.Database.Models.Message", null)
                         .WithOne()
                         .HasForeignKey("Api.Database.Models.PrivateMessage", "Id");
 
-                    b.HasOne("Api.Database.Models.Inbox", "Inbox")
-                        .WithMany("Messages")
-                        .HasForeignKey("InboxId1")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Inbox");
+                    b.Navigation("Dm");
                 });
 
             modelBuilder.Entity("Api.Database.Models.PublicMessage", b =>
@@ -1210,6 +1180,8 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Database.Models.Inbox", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Api.Database.Models.Landmark", b =>
@@ -1255,8 +1227,6 @@ namespace Api.Migrations
                     b.Navigation("BlacklistedBys");
 
                     b.Navigation("Blacklists");
-
-                    b.Navigation("Channels");
 
                     b.Navigation("MessageDecoration")
                         .IsRequired();

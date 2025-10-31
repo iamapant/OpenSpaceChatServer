@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Api.Database.Models;
 
+/// <summary>
+/// Frame options only serves to modify the chosen frame. To change the selected frame, use Message Frame 
+/// </summary>
 [Table("MessageFrameOptions")]
 public class MessageFrameOptions {
     [Key]
@@ -16,8 +19,9 @@ public class MessageFrameOptions {
     //TODO: Options...
 
 
-    public ICollection<PublicArchive>? PublicArchives { get; set; }
-    public ICollection<PrivateArchive>? PrivateArchives { get; set; }
+    public ICollection<UserInfo> UserDefaults { get; set; } = new List<UserInfo>();
+    public ICollection<PrivateArchive> PrivateArchives { get; set; } = new List<PrivateArchive>();
+    public ICollection<PublicArchive> PublicArchives { get; set; } = new List<PublicArchive>();
 }
 public class MessageFrameOptionsModelCreation : IModelCreationSettings<MessageFrameOptions> {
     public void OnModelCreating(EntityTypeBuilder<MessageFrameOptions> builder, ModelBuilder mb) {

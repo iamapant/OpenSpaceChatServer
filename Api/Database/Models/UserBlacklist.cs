@@ -21,5 +21,7 @@ public class UserBlacklistModelCreation : IModelCreationSettings<UserBlacklist> 
     public void OnModelCreating(EntityTypeBuilder<UserBlacklist> builder, ModelBuilder mb) {
         builder.HasKey(t => new { t.UserId, t.BlacklistId });
         builder.Property(e => e.Temporary).HasDefaultValue(false);
+        builder.HasOne(e => e.User).WithMany(e => e.Blacklists).HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(e => e.Blacklist).WithMany(e => e.BlacklistedBys).HasForeignKey(e => e.BlacklistId).OnDelete(DeleteBehavior.Cascade);
     }
 }

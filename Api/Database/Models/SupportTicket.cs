@@ -18,11 +18,14 @@ public class SupportTicket {
     public string Type { get; set; } = null!;       //Add-Remove landmark, report user,  request feature, chat with admin,...
     [Required, MaxLength(250)]
     public string Title { get; set; } = null!;
-    [Required, MaxLength(1500)]
+    [Required, MaxLength(2048)]
     public string Content { get; set; } = null!;
+    
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public Position? Position => Latitude != null && Longitude != null ? new ((double)Latitude, (double)Longitude) : null;
+    
+    public ICollection<SupportTicketData>? Data { get; set; }
 }
 
 public class SupportTicketModelCreation : IModelCreationSettings<SupportTicket> {

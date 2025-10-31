@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Api.Database.Models;
 
@@ -26,16 +27,7 @@ public abstract class Message {
     public double Longitude { get; set; }
     public Position Position => new (Latitude, Longitude);
     
-    [ForeignKey(nameof(MessageFontFamily))]
-    public Guid MessageFontFamilyId { get; set; }
-
-    public FontFamily MessageFontFamily { get; set; } = null!;
-    [ForeignKey(nameof(MessageFontStyle))]
-    public Guid MessageFontStyleId { get; set; }
-
-    public FontStyle MessageFontStyle { get; set; } = null!;
-    
-    public Guid LandmarkId { get; set; }
+    public Guid? LandmarkId { get; set; }
     [ForeignKey(nameof(LandmarkId))]
     public Landmark? Landmark { get; set; }
 

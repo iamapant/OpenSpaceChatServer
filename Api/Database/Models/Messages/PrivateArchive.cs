@@ -20,11 +20,13 @@ public class PrivateArchive : PrivateMessage, IArchive {
     public bool IsPublic { get; set; }
 
     
-    public MessageFrameType? FrameType { get; set; }
     [MaxLength(500)]
     public string? Note { get; set; }
     
-    
+    [ForeignKey(nameof(Frame))]
+    public Guid? FrameId { get; set; }
+    public MessageFrame? Frame { get; set; }
+
     [ForeignKey(nameof(FrameOptions))]
     public Guid? FrameOptionsId { get; set; }
     public MessageFrameOptions? FrameOptions { get; set; }
@@ -43,6 +45,5 @@ public class PrivateArchive : PrivateMessage, IArchive {
 public class PrivateArchiveModelCreation : IModelCreationSettings<PrivateArchive> {
     public void OnModelCreating(EntityTypeBuilder<PrivateArchive> builder, ModelBuilder mb) {
         builder.Property(e => e.IsPublic).HasDefaultValue(false);
-        builder.HasIndex(e => new {e.DmId, e.Created }).IsUnique(false);
     }
 }

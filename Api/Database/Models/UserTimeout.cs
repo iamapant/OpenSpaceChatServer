@@ -6,7 +6,9 @@ namespace Api.Database.Models;
 
 [Table("UserTimeouts")]
 public class UserTimeout {
+    [ForeignKey(nameof(User))]
     public Guid UserId { get; set; }
+    [ForeignKey(nameof(Channel))]
     public Guid ChannelId { get; set; }
     
     public DateTime TimeoutEnd { get; set; }

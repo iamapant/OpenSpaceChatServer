@@ -13,6 +13,13 @@ public class FontFamily {
 
     [Required, MaxLength(300)]
     public string Family { get; set; } = string.Empty;
+    
+    public ICollection<UserInfo> UserDefaults { get; set; } = new List<UserInfo>();
+    // public ICollection<PrivateMessage> PrivateMessages { get; set; } = new List<PrivateMessage>();
+    public ICollection<PrivateArchive> PrivateArchives { get; set; } = new List<PrivateArchive>();
+    // public ICollection<PublicMessage> PublicMessages { get; set; } = new List<PublicMessage>();
+    public ICollection<PublicArchive> PublicArchives { get; set; } = new List<PublicArchive>();
+    
 }
 
 public class FontFamilyModelCreation : IModelCreationSettings<FontFamily> {

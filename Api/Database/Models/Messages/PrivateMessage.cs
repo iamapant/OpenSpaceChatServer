@@ -6,17 +6,17 @@ namespace Api.Database.Models;
 
 [Table("PrivateMessages")]
 public class PrivateMessage : Message {
-    /// <summary>
-    /// Only 1 message in the chat can be pinned at a time
-    /// </summary>
-    public bool IsPinned { get; set; }
-    public Guid? DmId { get; set; }
-    [ForeignKey(nameof(DmId))]
-    public Channel? Dm { get; set; }
+    public Guid InboxId { get; set; }
+    [ForeignKey(nameof(InboxId))]
+    public Inbox Inbox { get; set; } = null!;
+    public Guid PinnedDmId { get; set; }
+    [ForeignKey(nameof(PinnedDm))]
+    public Inbox PinnedDm { get; set; } = null!;
 }
 
 public class PrivateMessageModelCreation : IModelCreationSettings<PrivateMessage> {
     public void OnModelCreating(EntityTypeBuilder<PrivateMessage> builder, ModelBuilder mb) {
-        builder.Property(e => e.IsPinned).HasDefaultValue(false);
+        builder.HasOne(e => e.PinnedDm).WithOne(e => e.PinnedMessage).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(e => e.Inbox).WithMany(e => e.Messages).OnDelete(DeleteBehavior.Cascade);
     }
 }

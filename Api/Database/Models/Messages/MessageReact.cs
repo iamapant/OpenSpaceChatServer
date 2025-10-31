@@ -15,7 +15,7 @@ public class MessageReaction {
     [Required, MaxLength(10)]
     public string Reaction { get; set; } = string.Empty;
     
-    public Message Message { get; set; } = null!;
+    public Message Message { get; set; } = null!; 
     public User User { get; set; } = null!;
 }
 

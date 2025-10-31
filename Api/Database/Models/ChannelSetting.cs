@@ -14,8 +14,14 @@ public class ChannelSetting {
     /// </summary>
     public TimeSpan MessageDuration { get; set; }
     
-    public int? MessageHighlightThreshold { get; set; } //How many reactions for this message to be highlighted
-    public int? MessageArchiveThreshold { get; set; } //How many reactions for this message to be archived
+    /// <summary>
+    /// How many reactions for this message to be highlighted
+    /// </summary>
+    public int? MessageHighlightThreshold { get; set; }
+    /// <summary>
+    /// How many reactions for this message to be archived
+    /// </summary>
+    public int? MessageArchiveThreshold { get; set; } 
 
     public Channel Channel { get; set; } = null!;
 }

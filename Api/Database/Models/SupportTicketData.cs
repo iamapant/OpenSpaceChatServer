@@ -6,24 +6,22 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Api.Database.Models;
 
-/// <summary>
-/// For video, photo, message, inbox, public message (copy the message),... 
-/// </summary>
-[Table(nameof(ReportData))]
-public class ReportData {
+[Table("SupportTicketData")]
+public class SupportTicketData {
     [Key]
     public Guid Id { get; set; }
-    [ForeignKey(nameof(SupportTicket))]
-    public Guid ReportId { get; set; }
-    public SupportTicket SupportTicket { get; set; } = null!;
+    [Required, MaxLength(10)]
+    public string Type { get; set; } = null!;
+    [Required, MaxLength(2048)]
+    public string Content { get; set; } = null!;
     
-    [Required]
-    public string DataType { get; set; } = string.Empty;
-    [Required]
-    public string Data { get; set; } = string.Empty;
+    [ForeignKey(nameof(SupportTicket))]
+    public Guid SupportTicketId { get; set; }
+    public SupportTicket SupportTicket { get; set; } = null!;
 }
-public class ReportDataModelCreation : IModelCreationSettings<ReportData> {
-    public void OnModelCreating(EntityTypeBuilder<ReportData> builder, ModelBuilder mb) {
+
+public class SupportTicketDataModelCreation : IModelCreationSettings<SupportTicketData> {
+    public void OnModelCreating(EntityTypeBuilder<SupportTicketData> builder, ModelBuilder mb) {
         builder.Property(e => e.Id).HasValueGenerator<SequentialGuidValueGenerator>().ValueGeneratedOnAdd();
     }
 }

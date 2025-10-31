@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Linq.Expressions;
 using Api.Database.Models;
+using Api.Hashing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -34,9 +35,9 @@ public static class ModelCreationRepository {
         [typeof(PublicArchive)] = typeof(PublicArchiveModelCreation),
         [typeof(MessageStickerStyle)] = typeof(MessageStickerStyleModelCreation),
         [typeof(SupportTicket)] = typeof(SupportTicketModelCreation),
-        [typeof(ReportData)] = typeof(ReportDataModelCreation),
         [typeof(UserBlacklist)] = typeof(UserBlacklistModelCreation),
         [typeof(CuratorSettings)] = typeof(CuratorSettingsCreationModel),
+        [typeof(SupportTicketData)] = typeof(SupportTicketDataModelCreation),
     };
 
     public static void AddModelCreationFor<TTable, TModelCreation>()
@@ -82,5 +83,39 @@ public static class ModelCreationRepository {
         }
 
         return result;
+    }
+
+    public static void SeedUser(ModelBuilder modelBuilder) {
+        
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+        var adminConfig = config.GetSection("Admin");
+        
+        var adminUsername = adminConfig.GetValue<string>("Username");
+        var adminPassword = adminConfig.GetValue<string>("Password");
+        var adminEmail = adminConfig.GetValue<string>("Email");
+        if (adminUsername == null || adminPassword == null || adminEmail == null) {
+            var nulledData = string.Empty;
+            nulledData += adminUsername == null ? nameof(User.Name) : "";
+            nulledData += (nulledData.Length > 0 ? ", " : "") + (adminPassword == null ? "Password" : "");
+            nulledData += (nulledData.Length > 0 ? ", " : "") + (adminEmail == null ? nameof(UserInfo.Email) : "");
+            
+            throw new Exception($"Seed data must not be null: {nulledData}");
+        }
+        
+        var adminRole = new Role { Id = Guid.Parse("019a3685-bab8-7dc4-ac85-8d0bb0d63218"), Name = "Admin" };
+        var curatorRole = new Role { Id = Guid.Parse("019a3686-1b37-7087-9600-399694d0e4a1"), Name = "Curator" };
+        var userRole = new Role { Id = Guid.Parse("019a3686-49f2-71d6-97bd-a2bb8e42da8e"), Name = "User" };
+        
+        var admin = new User { Id = Guid.Parse("019a3686-7e19-75d0-bf65-96f0f919394e"), Name = "Admin", PasswordHash = "$argon2id$v=19$m=65536,t=3,p=1$eI12WvnpYPXzPf4AG5Bsfg$fZLnznwn3EsME9EM1MG/N5ktw61J8adMYcH8JY9+gUg", Created = new DateTime(1,1,1,1,1,1,DateTimeKind.Utc), IsActive = true, RoleId = adminRole.Id };
+        var adminInfo = new UserInfo { Id = admin.Id, Email = adminEmail, FirstName = adminUsername, DoB = new DateTime(2000, 1, 1, 0 ,0 ,0 , DateTimeKind.Utc), Updated = new DateTime(1,1,1,1,1,1,DateTimeKind.Utc)};
+        
+        modelBuilder.Entity<Role>().HasData(adminRole, curatorRole, userRole);
+        modelBuilder.Entity<User>().HasData(admin);
+        modelBuilder.Entity<UserInfo>().HasData(adminInfo);
     }
 }
