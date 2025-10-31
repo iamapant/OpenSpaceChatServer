@@ -32,14 +32,14 @@ public class AppDbContext : DbContext {
         base.OnConfiguring(optionsBuilder);
 
         if (!optionsBuilder.IsConfigured) {
-            // var config = new ConfigurationBuilder()
-            //     .AddJsonFile("appsettings.json")
-            //     .Build();
-            // optionsBuilder.UseNpgsql(
-            //     config.GetConnectionString("DefaultConnection"));
-
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
             optionsBuilder.UseNpgsql(
-                "Host=localhost; Database=OpenSpaceChat; Username=postgres; Password=1");
+                config.GetConnectionString("DefaultConnection"));
+
+            // optionsBuilder.UseNpgsql(
+            //     "Host=localhost; Database=OpenSpaceChat; Username=postgres; Password=1");
         }
     }
 
