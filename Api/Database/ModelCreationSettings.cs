@@ -38,6 +38,7 @@ public static class ModelCreationRepository {
         [typeof(UserBlacklist)] = typeof(UserBlacklistModelCreation),
         [typeof(CuratorSettings)] = typeof(CuratorSettingsCreationModel),
         [typeof(SupportTicketData)] = typeof(SupportTicketDataModelCreation),
+        [typeof(OldPassword)] = typeof(OldPasswordModelCreation),
     };
 
     public static void AddModelCreationFor<TTable, TModelCreation>()

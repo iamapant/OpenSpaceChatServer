@@ -11,6 +11,8 @@ public class ValidationResult {
         _errors = [new(code, message, source)];
     }
     
+    public ValidationResult(Exception ex, object? source = null) : this(ex.GetType().Name, ex.Message, source) { }
+    
     public bool IsValid => _errors.Count == 0;
     public ReadOnlyCollection<ValidationError> Errors => _errors.AsReadOnly();
     private List<ValidationError> _errors = new ();

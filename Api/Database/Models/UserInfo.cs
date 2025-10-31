@@ -9,7 +9,7 @@ public class UserInfo {
     public Guid Id { get; set; }
     
     
-    [Required, EmailAddress, MaxLength(50)]
+    [Required, EmailAddress, MaxLength(255)]
     public string Email { get; set; } = null!;
     [Phone,  MaxLength(15)]
     public string? Phone { get; set; }
@@ -27,8 +27,8 @@ public class UserInfo {
     public string? AvatarUrl { get; set; }
     [MaxLength(2048)]
     public string? CoverUrl { get; set; }
-    [MaxLength(60)]
-    public string? Country { get; set; }
+    [MaxLength(2)]
+    public string? CountryCode { get; set; }
     
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime Updated { get; set; }

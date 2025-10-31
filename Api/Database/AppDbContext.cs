@@ -25,7 +25,7 @@ public class AppDbContext : DbContext {
     public DbSet<UserMessageDecoration> DefaultMessageDecorations { get; set; }
     public DbSet<UserTimeout> Timeouts { get; set; }
     public DbSet<CuratorSettings> CuratorSettings { get; set; }
-    
+    public DbSet<OldPassword> OldPasswords { get; set; }
 
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder) {

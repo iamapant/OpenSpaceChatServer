@@ -16,6 +16,8 @@ public class User {
     public string PasswordHash { get; set; } = null!;
     [Required]
     public bool IsActive { get; set; } = true;
+
+    public DateTime? IsDeleted { get; set; } 
     
     [Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime Created { get; set; }
@@ -37,6 +39,7 @@ public class User {
     public ICollection<UserBlacklist> BlacklistedBys { get; set; } = new List<UserBlacklist>();
     public ICollection<Inbox> Inboxes { get; set; } = new List<Inbox>();
     public ICollection<Channel> Channels { get; set; } = new List<Channel>();
+    public ICollection<OldPassword> OldPasswords { get; set; } = new List<OldPassword>();
 }
 
 public class UserModelCreation : IModelCreationSettings<User> {
