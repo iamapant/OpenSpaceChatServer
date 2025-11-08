@@ -1,4 +1,11 @@
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+using Api.DAL;
+using Api.Database;
+using Api.Providers.Token;
+using Microsoft.IdentityModel.Tokens;
+
 namespace Api
 {
     public class Program
@@ -8,7 +15,30 @@ namespace Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddLogging(o => {
+                o.AddConsole();
+                o.AddDebug();
+            });
+            builder.Services.AddDbContext<AppDbContext>();
+            builder.Services.AddSingleton<IGlobalSettings, GlobalSettings>();
+            builder.Services.AddScoped<RefreshTokenProvider>();
+            
+            #region jwt
+            builder.Services.AddScoped<JwtTokenProvider>();
+            
+            var handler = new JwtSecurityTokenHandler() {
+#error implementation
+            };
+            builder.Services.AddSingleton(handler);
 
+            var tvp = new TokenValidationParameters() {
+#error implementation
+            };
+            builder.Services.AddSingleton(tvp);
+            #endregion
+            
+            builder.Services.AddRepositories();
+            
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
@@ -30,5 +60,23 @@ namespace Api
 
             app.Run();
         }
+    }
+    
+    public static class ProgramExtensions {
+            public static IServiceCollection AddRepositories(this IServiceCollection services) {
+                var repos = GetRepos();
+                foreach (var repo in repos) services.AddScoped(repo);
+
+                IEnumerable<Type> GetRepos() {
+                    var assembly = typeof(DatabaseRepository).Assembly;
+                    //Get all repository types
+                    var types = assembly.GetTypes().Where(t => t.IsAssignableTo(typeof(DatabaseRepository)) && t.Name.EndsWith("Repository"));
+                    //Get only concrete types
+                    types = types.Where(t => t.IsClass && !t.IsAbstract && !t.IsGenericTypeDefinition);
+                    
+                    return types;
+                }
+                return services;
+            }
     }
 }
