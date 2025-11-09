@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.DAL;
 
-public class MessageReactionRepository : DatabaseRepository<MessageReaction> {
+public class MessageReactionRepository : DatabaseRepository<Reaction> {
     public MessageReactionRepository(AppDbContext context) : base(context) { }
 
     public async Task<ValidationResult> React(MessageReactionDto dto) {
@@ -24,7 +24,7 @@ public class MessageReactionRepository : DatabaseRepository<MessageReaction> {
                     e.MessageId == message.Id && e.UserId == user.Id);
                 if (oldReaction == null)
                     throw new Exception("Failed to react message from dto.");
-                oldReaction.Reaction = reaction.Reaction;
+                oldReaction.ReactionType = reaction.ReactionType;
                 oldReaction.Created = DateTime.UtcNow;
 
                 await Save(oldReaction);

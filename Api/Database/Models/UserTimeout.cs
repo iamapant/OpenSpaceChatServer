@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,7 +7,7 @@ namespace Api.Database.Models;
 
 [Table("UserTimeouts")]
 public class UserTimeout {
-    [ForeignKey(nameof(User))]
+    [Key, ForeignKey(nameof(User))]
     public Guid UserId { get; set; }
     [ForeignKey(nameof(Channel))]
     public Guid ChannelId { get; set; }
@@ -19,6 +20,5 @@ public class UserTimeout {
 
 public class UserTimeoutModelCreation : IModelCreationSettings<UserTimeout> {
     public void OnModelCreating(EntityTypeBuilder<UserTimeout> builder, ModelBuilder mb) {
-        builder.HasKey(e => new { e.UserId, e.ChannelId });
     }
 }

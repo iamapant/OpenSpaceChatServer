@@ -26,14 +26,14 @@ public class User {
     [MaxLength(128)]
     public string? RefreshToken { get; set; }
     
-    public UserTimeout Timeout { get; set; } = null!;
+    public UserTimeout? Timeout { get; set; }
     public UserInfo UserInfo { get; set; } = null!;
     public UserMessageDecoration MessageDecoration { get; set; } = null!;
     [ForeignKey(nameof(Role))]
     public Guid RoleId { get; set; }
     public Role Role { get; set; } = null!;
     
-    public ICollection<MessageReaction> Reactions { get; set; } = new List<MessageReaction>();
+    public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     
     public ICollection<UserBlacklist> Blacklists { get; set; } = new List<UserBlacklist>();
     public ICollection<UserBlacklist> BlacklistedBys { get; set; } = new List<UserBlacklist>();

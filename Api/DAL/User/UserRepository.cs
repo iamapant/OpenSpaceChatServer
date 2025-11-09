@@ -73,7 +73,16 @@ public class UserRepository : DatabaseRepository<User> {
 
         return new();
     }
-    
+
+    public async Task AddDefaultUserDecoration(User user, ILogger log) {
+        try {
+            
+            
+            await _context.SaveChangesAsync();
+        } catch (Exception ex) {
+            log.LogWarning(ex, "Cannot add message decoration.");
+        }
+    }
 
     public async Task DeleteExpiredUsers(ILogger log) {
         try {

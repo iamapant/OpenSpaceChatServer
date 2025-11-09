@@ -19,6 +19,21 @@ public class CuratorSettings {
     public float PublicMessageFrequencyPerInterval { get; set; }
     public int PublicMessageFrequencyIntervalInSecond { get; set; }
     public float DefaultTimeoutPeriodInMinute { get; set; }
+    
+    //Default font style
+    public int DefaultFontWeight { get; set; }
+    public string DefaultFontStyle { get; set; }
+    public float DefaultFontSizeInPx { get; set; }
+    public float DefaultLetterSpacing { get; set; }
+    public float DefaultLineSpacing { get; set; }
+    public string? DefaultTextDecoration { get; set; }
+    public string? DefaultTextTransform { get; set; }
+    
+    //Default message decoration
+    public string DefaultFrameId { get; set; }
+    public string DefaultFrameOptionsId { get; set; }
+    public string DefaultFontStyleId { get; set; }
+    public string DefaultFontFamilyId { get; set; }
 }
 
 public class CuratorSettingsCreationModel : IModelCreationSettings<CuratorSettings> {
@@ -36,6 +51,17 @@ public class CuratorSettingsCreationModel : IModelCreationSettings<CuratorSettin
             PublicMessageFrequencyPerInterval = 5,
             PublicMessageFrequencyIntervalInSecond = 5,
             DefaultTimeoutPeriodInMinute = 20,
+            DefaultFontWeight = 400,
+            DefaultFontStyle = "Arial",
+            DefaultFontSizeInPx = 16,
+            DefaultLetterSpacing = 0,
+            DefaultLineSpacing = 1.6f,
+            DefaultTextDecoration = "",
+            DefaultTextTransform = "",
+            DefaultFrameId = Frame.DefaultId,
+            DefaultFrameOptionsId = FrameOptions.DefaultId,
+            DefaultFontStyleId = FontStyle.DefaultId,
+            DefaultFontFamilyId = FontFamily.DefaultId,
         });
     }
 }

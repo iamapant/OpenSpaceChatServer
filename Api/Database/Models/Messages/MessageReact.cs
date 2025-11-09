@@ -5,22 +5,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Api.Database.Models;
 
-[Table("MessageReacts")]
-public class MessageReaction {
+[Table("Reactions")]
+public class Reaction {
     [ForeignKey(nameof(Message)), MaxLength(100)]
     public string MessageId { get; set; } = string.Empty;
     [ForeignKey(nameof(User))]
     public Guid UserId { get; set; }
-    
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public DateTime Created { get; set; }
     [Required, MaxLength(10)]
-    public string Reaction { get; set; } = string.Empty;
+    public string ReactionType { get; set; } = string.Empty;
     
     public Message Message { get; set; } = null!; 
     public User User { get; set; } = null!;
 }
 
-public class MessageReactionModelCreation : IModelCreationSettings<MessageReaction> {
-    public void OnModelCreating(EntityTypeBuilder<MessageReaction> builder, ModelBuilder mb) {
+public class ReactionModelCreation : IModelCreationSettings<Reaction> {
+    public void OnModelCreating(EntityTypeBuilder<Reaction> builder, ModelBuilder mb) {
         builder.HasKey(e => new { e.MessageId, e.UserId });
     }
 }

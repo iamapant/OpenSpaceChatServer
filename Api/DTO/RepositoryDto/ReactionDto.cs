@@ -3,18 +3,18 @@ using Api.Database.Models;
 
 namespace Api.DTO;
 
-public class MessageReactionDto : IAddDto<MessageReaction> {
+public class MessageReactionDto : IAddDto<Reaction> {
     [Required]
     public string UserId { get; set; } = null!;
     [Required]
     public string MessageId { get; set; } = null!;
     [Required]
     public string Reaction { get; set; } = null!;
-    public MessageReaction? Map() {
+    public Reaction? Map() {
         if (!Guid.TryParse(UserId, out var userId))
             return null;
-        return new MessageReaction {
-            UserId = userId, MessageId = MessageId, Reaction = Reaction
+        return new Reaction {
+            UserId = userId, MessageId = MessageId, ReactionType = Reaction
         };
     }
 }

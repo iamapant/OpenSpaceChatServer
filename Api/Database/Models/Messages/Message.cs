@@ -31,9 +31,13 @@ public abstract class Message {
     [ForeignKey(nameof(LandmarkId))]
     public Landmark? Landmark { get; set; }
 
-    public ICollection<MessageReaction> Reactions { get; set; } = new List<MessageReaction>();
+    public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     
     public string GetId() {
-        return $"{User?.Id.ToString()??"0"}_{Position.Latitude}.{Position.Longitude}_{Guid.CreateVersion7().ToString()}";
+        return GetId(UserId?.ToString() ?? "0", Position);
+    }
+
+    public static string GetId(string userId, Position position) {
+        return $"{userId}_{position.Latitude}.{position.Longitude}_{Guid.CreateVersion7().ToString()}";
     }
 }

@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Api.Database;
 using Api.Database.Models;
+using Api.DTO;
 using Api.Providers.Email;
 using Api.Providers.Token;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ public interface IGlobalSettings {
     CuratorSettings Curator { get; }
     EmailSettings Email { get; }
     JwtSettings Jwt { get; }
+    MessageDecorationDto Decoration { get; }
     
     Task ReloadAllAsync();
     Task ReloadAdminAsync();
@@ -52,6 +54,20 @@ public class GlobalSettings : IGlobalSettings {
     }
     
     public static DateTime LastRefresh { get; private set; }
+
+    public MessageDecorationDto Decoration =>
+        new() {
+            FontFamilyId = _fontFamilyId
+          , FontStyleId = _fontStyleId
+          , FrameId = _frameId
+          , FrameOptionsId = _frameOptionsId
+        };
+
+    private Guid _fontFamilyId = Guid.Empty;
+    private Guid _fontStyleId = Guid.Empty;
+    private Guid _frameId = Guid.Empty;
+    private Guid _frameOptionsId = Guid.Empty;
+
     public async Task ReloadAllAsync() {
         await ReloadCuratorAsync();
         await ReloadAdminAsync();
@@ -83,6 +99,15 @@ public class GlobalSettings : IGlobalSettings {
 
     public async Task ReloadCuratorAsync() {
         _curator = await _ctx.CuratorSettings.FirstOrDefaultAsync() ?? throw new Exception("Curator settings not found.");
+        if (Guid.TryParse(_curator.DefaultFontFamilyId, out var fontFamily)) _fontFamilyId = fontFamily;
+        else throw new Exception("Default font family not set.");
+        if (Guid.TryParse(_curator.DefaultFontStyle, out var fontStyle)) _fontStyleId = fontStyle;
+        else throw new Exception("Default font style not set.");
+        if (Guid.TryParse(_curator.DefaultFrameId, out var frame)) _frameId = frame;
+        else throw new Exception("Default frame not set.");
+        if (Guid.TryParse(_curator.DefaultFrameOptionsId, out var frameOptions)) _frameOptionsId = frameOptions;
+        else throw new Exception("Default frame options not set.");
+
     }
 
     public async Task ReloadEmailAsync() {

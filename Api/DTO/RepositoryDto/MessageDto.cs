@@ -50,9 +50,6 @@ public class ArchivePrivateMessageDto : IAddDto<PrivateArchive> {
     public string Id { get; set; } = null!;
 
     [Required]
-    public string UserId { get; set; } = null!;
-
-    [Required]
     public string ArchivedUserId { get; set; } = null!;
 
     public bool IsPublic { get; set; } = true;
@@ -60,63 +57,64 @@ public class ArchivePrivateMessageDto : IAddDto<PrivateArchive> {
     public MessageFrameDto? Frame { get; set; }
     public FontStyleDto? Style { get; set; }
     public string? FontFamily { get; set; }
-    public ICollection<StickerDto>? Stickers { get; set; }
+    public ICollection<ArchiveStickerDto>? Stickers { get; set; }
 
     public PrivateArchive? Map() {
-        if (!Guid.TryParse(ArchivedUserId, out var archivedUserId)
-         || !Guid.TryParse(UserId, out var userId)) return null;
+        if (!Guid.TryParse(ArchivedUserId, out var archivedUserId)) return null;
         return new PrivateArchive {
-            UserId = userId
+            Id = Id
           , ArchivedUserId = archivedUserId
           , IsPublic = IsPublic
           , Note = Note
         };
-        ***Make sure to config other fields as well
     }
 
 
-    public async Task MapMessage(PrivateArchive archive
-      , PrivateMessage msg
-      , AppDbContext ctx) {
-        archive.Id = msg.Id;
-        archive.UserId = msg.UserId;
-        archive.ContentType = msg.ContentType;
-        archive.Content = msg.Content;
-        archive.Created = msg.Created;
-        archive.Latitude = msg.Position.Latitude;
-        archive.Longitude = msg.Position.Longitude;
-        archive.LandmarkId = msg.LandmarkId;
-        archive.InboxId = msg.InboxId;
-        archive.PinnedDmId = msg.PinnedDmId;
-        archive.Reactions = msg.Reactions.Select(r
-                                   => new MessageReaction() {
-                                       MessageId = r.MessageId
-                                     , UserId = r.UserId
-                                     , Reaction = r.Reaction
-                                     , Created = r.Created
-                                   })
-                               .ToList();
-        //Frame
-        if (Frame != null) {
-            //Type
-            var frame = await ctx.MessageFrames.FindAsync(Frame.FrameId);
-            if (frame == null) {
-                archive.FrameId = frame?.Id ?? Guid.Parse(MessageFrame.DefaultId);
-            }
-
-            //Options
-            Color? primaryColor = Frame.PrimaryColorArgb.HasValue
-                ? Color.FromArgb(Frame.PrimaryColorArgb.Value)
-                : null;
-            Color? secondaryColor = Frame.SecondaryColorArgb.HasValue
-                ? Color.FromArgb(Frame.SecondaryColorArgb.Value)
-                : null;
-
-            var fOptions = await ctx.Frames.FirstOrDefaultAsync(o =>
-                o.ColorPrimary == primaryColor && o.ColorSecondary == secondaryColor);
-            if (fOptions)
-        }
-    }
+    // public async Task MapMessage(PrivateArchive archive
+    //   , PrivateMessage msg
+    //   , AppDbContext ctx) {
+    //     archive.Id = msg.Id;
+    //     archive.UserId = msg.UserId;
+    //     archive.ContentType = msg.ContentType;
+    //     archive.Content = msg.Content;
+    //     archive.Created = msg.Created;
+    //     archive.Latitude = msg.Position.Latitude;
+    //     archive.Longitude = msg.Position.Longitude;
+    //     archive.LandmarkId = msg.LandmarkId;
+    //     archive.InboxId = msg.InboxId;
+    //     archive.PinnedDmId = msg.PinnedDmId;
+    //     archive.Reactions = msg.Reactions.Select(r
+    //                                => new MessageReaction() {
+    //                                    MessageId = r.MessageId
+    //                                  , UserId = r.UserId
+    //                                  , Reaction = r.Reaction
+    //                                  , Created = r.Created
+    //                                })
+    //                            .ToList();
+    //     //Frame
+    //     if (Frame != null) {
+    //         //Type
+    //         var frame = await ctx.MessageFrames.FindAsync(Frame.FrameId);
+    //         if (frame == null) {
+    //             archive.FrameId = frame?.Id ?? Guid.Parse(MessageFrame.DefaultId);
+    //         }
+    //
+    //         //Options
+    //         Color? primaryColor = Frame.PrimaryColorArgb.HasValue
+    //             ? Color.FromArgb(Frame.PrimaryColorArgb.Value)
+    //             : null;
+    //         Color? secondaryColor = Frame.SecondaryColorArgb.HasValue
+    //             ? Color.FromArgb(Frame.SecondaryColorArgb.Value)
+    //             : null;
+    //
+    //         var fOptions = await ctx.Frames.FirstOrDefaultAsync(o =>
+    //             o.ColorPrimary == primaryColor && o.ColorSecondary == secondaryColor);
+    //         if (fOptions != null) {
+    //             
+    //         }
+    //         else 
+    //     }
+    // }
 }
 
 public class PublicMessageDto : MessageDto, IAddDto<PublicMessage> {
@@ -141,6 +139,8 @@ public class PublicMessageDto : MessageDto, IAddDto<PublicMessage> {
 
 public class ArchivePublicMessageDto : IAddDto<PublicArchive> {
     [Required]
+    public string Id { get; set; } = null!;
+    [Required]
     public string UserId { get; set; } = null!;
 
     [Required]
@@ -156,6 +156,48 @@ public class ArchivePublicMessageDto : IAddDto<PublicArchive> {
         if (!Guid.TryParse(ArchivedUserId, out var archivedUserId)
          || !Guid.TryParse(UserId, out var userId)) return null;
         return new PublicArchive { UserId = userId, Note = Note };
-        ***Make sure to config other fields as well
+        // ***Make sure to config other fields as well
     }
+    // public async Task MapMessage(PublicArchive archive
+    //   , PublicMessage msg
+    //   , AppDbContext ctx) {
+    //     archive.Id = msg.Id;
+    //     archive.UserId = msg.UserId;
+    //     archive.ContentType = msg.ContentType;
+    //     archive.Content = msg.Content;
+    //     archive.Created = msg.Created;
+    //     archive.Latitude = msg.Position.Latitude;
+    //     archive.Longitude = msg.Position.Longitude;
+    //     archive.LandmarkId = msg.LandmarkId;
+    //     archive.Reactions = msg.Reactions.Select(r
+    //                                => new MessageReaction() {
+    //                                    MessageId = r.MessageId
+    //                                  , UserId = r.UserId
+    //                                  , Reaction = r.Reaction
+    //                                  , Created = r.Created
+    //                                })
+    //                            .ToList();
+    //     //Frame
+    //     if (Frame != null) {
+    //         //Type
+    //         var frame = await ctx.MessageFrames.FindAsync(Frame.FrameId);
+    //         if (frame == null) {
+    //             archive.FrameId = frame?.Id ?? Guid.Parse(MessageFrame.DefaultId);
+    //         }
+    //
+    //         //Options
+    //         Color? primaryColor = Frame.PrimaryColorArgb.HasValue
+    //             ? Color.FromArgb(Frame.PrimaryColorArgb.Value)
+    //             : null;
+    //         Color? secondaryColor = Frame.SecondaryColorArgb.HasValue
+    //             ? Color.FromArgb(Frame.SecondaryColorArgb.Value)
+    //             : null;
+    //
+    //         var fOptions = await ctx.Frames.FirstOrDefaultAsync(o =>
+    //             o.ColorPrimary == primaryColor && o.ColorSecondary == secondaryColor);
+    //         if (fOptions != null) {
+    //             
+    //         }
+    //     }
+    // }
 }

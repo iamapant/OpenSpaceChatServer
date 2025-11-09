@@ -9,19 +9,19 @@ public class UserMessageDecoration {
     public Guid UserId { get; set; }
     [ForeignKey(nameof(Frame))]
     public Guid? FrameId { get; set; }
-    public MessageFrame? Frame { get; set; }
+    public Frame? Frame { get; set; }
     
     [ForeignKey(nameof(FrameOptions))]
     public Guid? FrameOptionsId { get; set; }
-    public MessageFrameOptions? FrameOptions { get; set; } = null!;
+    public FrameOptions? FrameOptions { get; set; } 
     
     [ForeignKey(nameof(NoteFontStyle))]
     public Guid? NoteFontStyleId { get; set; }
-    public FontStyle? NoteFontStyle { get; set; } = null!;
+    public FontStyle? NoteFontStyle { get; set; } 
     
     [ForeignKey(nameof(NoteFontFamily))]
     public Guid? NoteFontFamilyId { get; set; }
-    public FontFamily? NoteFontFamily { get; set; } = null!;
+    public FontFamily? NoteFontFamily { get; set; } 
     
     public User User { get; set; } = null!;
 }

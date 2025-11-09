@@ -20,7 +20,8 @@ public class SupportTicket {
     public string Title { get; set; } = null!;
     [Required, MaxLength(2048)]
     public string Content { get; set; } = null!;
-    
+    [MaxLength(500)]
+    public string? Tags { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public Position? Position => Latitude != null && Longitude != null ? new ((double)Latitude, (double)Longitude) : null;

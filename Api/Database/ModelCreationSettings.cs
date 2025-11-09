@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Linq.Expressions;
+using System.Reflection;
 using Api.Database.Models;
 using Api.Hashing;
 using Microsoft.EntityFrameworkCore;
@@ -28,17 +29,21 @@ public static class ModelCreationRepository {
         [typeof(Role)] = typeof(RoleModelCreation),
         [typeof(User)] = typeof(UserModelCreation),
         [typeof(UserTimeout)] = typeof(UserTimeoutModelCreation),
-        [typeof(MessageFrameOptions)] = typeof(MessageFrameOptionsModelCreation),
-        [typeof(MessageReaction)] = typeof(MessageReactionModelCreation),
+        [typeof(FrameOptions)] = typeof(FrameOptionsModelCreation),
+        [typeof(Reaction)] = typeof(ReactionModelCreation),
         [typeof(PrivateMessage)] = typeof(PrivateMessageModelCreation),
         [typeof(PrivateArchive)] = typeof(PrivateArchiveModelCreation),
         [typeof(PublicArchive)] = typeof(PublicArchiveModelCreation),
-        [typeof(MessageStickerStyle)] = typeof(MessageStickerStyleModelCreation),
+        [typeof(StickerStyle)] = typeof(StickerStyleModelCreation),
         [typeof(SupportTicket)] = typeof(SupportTicketModelCreation),
         [typeof(UserBlacklist)] = typeof(UserBlacklistModelCreation),
         [typeof(CuratorSettings)] = typeof(CuratorSettingsCreationModel),
+        [typeof(AdminSettings)] = typeof(AdminSettingsCreationModel),
         [typeof(SupportTicketData)] = typeof(SupportTicketDataModelCreation),
         [typeof(OldPassword)] = typeof(OldPasswordModelCreation),
+        [typeof(UserInfo)] = typeof(UserInfoModelCreation),
+        [typeof(StickerUrl)] = typeof(StickerUrlModelCreation),
+        [typeof(ArchiveSticker)] = typeof(ArchiveStickerModelCreation),
     };
 
     public static void AddModelCreationFor<TTable, TModelCreation>()
@@ -92,6 +97,7 @@ public static class ModelCreationRepository {
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddUserSecrets(Assembly.GetExecutingAssembly())
             .AddEnvironmentVariables()
             .Build();
         var adminConfig = config.GetSection("Admin");

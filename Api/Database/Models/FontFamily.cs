@@ -13,6 +13,9 @@ public class FontFamily {
 
     [Required, MaxLength(300)]
     public string Family { get; set; } = string.Empty;
+
+    public const string DefaultId = "019a62f7-4772-7b75-bf90-a279409799de";
+    public const string DefaultFamily = "Arial";
     
     public ICollection<UserInfo> UserDefaults { get; set; } = new List<UserInfo>();
     // public ICollection<PrivateMessage> PrivateMessages { get; set; } = new List<PrivateMessage>();
@@ -25,5 +28,6 @@ public class FontFamily {
 public class FontFamilyModelCreation : IModelCreationSettings<FontFamily> {
     public void OnModelCreating(EntityTypeBuilder<FontFamily> builder, ModelBuilder mb) {
         builder.Property(e => e.Id).HasValueGenerator<SequentialGuidValueGenerator>().ValueGeneratedOnAdd();
+        builder.HasData(new  FontFamily { Family = FontFamily.DefaultFamily, Id = Guid.Parse(FontFamily.DefaultId) });
     }
 }

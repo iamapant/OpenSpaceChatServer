@@ -27,12 +27,12 @@ namespace Api
             builder.Services.AddScoped<JwtTokenProvider>();
             
             var handler = new JwtSecurityTokenHandler() {
-#error implementation
+                //TODO: implementation
             };
             builder.Services.AddSingleton(handler);
 
             var tvp = new TokenValidationParameters() {
-#error implementation
+                //TODO: implementation
             };
             builder.Services.AddSingleton(tvp);
             #endregion

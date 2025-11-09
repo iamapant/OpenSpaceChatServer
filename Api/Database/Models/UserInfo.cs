@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Api.Database.Models;
 
@@ -7,7 +9,6 @@ namespace Api.Database.Models;
 public class UserInfo {
     [Key, ForeignKey(nameof(User))]
     public Guid Id { get; set; }
-    
     
     [Required, EmailAddress, MaxLength(255)]
     public string Email { get; set; } = null!;
@@ -34,4 +35,11 @@ public class UserInfo {
     public DateTime Updated { get; set; }
 
     public User User { get; set; } = null!; 
+}
+
+public class UserInfoModelCreation : IModelCreationSettings<UserInfo> {
+    public void OnModelCreating(EntityTypeBuilder<UserInfo> builder, ModelBuilder mb) {
+        builder.HasIndex(e => e.Phone).IsUnique();
+        builder.HasIndex(e => e.Email).IsUnique();
+    }
 }

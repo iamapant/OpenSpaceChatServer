@@ -25,11 +25,11 @@ public class PrivateArchive : PrivateMessage, IArchive {
     
     [ForeignKey(nameof(Frame))]
     public Guid? FrameId { get; set; }
-    public MessageFrame? Frame { get; set; }
+    public Frame? Frame { get; set; }
 
     [ForeignKey(nameof(FrameOptions))]
     public Guid? FrameOptionsId { get; set; }
-    public MessageFrameOptions? FrameOptions { get; set; }
+    public FrameOptions? FrameOptions { get; set; }
     
     [ForeignKey(nameof(NoteFontStyle))]
     public Guid? NoteFontStyleId { get; set; }
@@ -39,7 +39,9 @@ public class PrivateArchive : PrivateMessage, IArchive {
     public Guid? NoteFontFamilyId { get; set; }
     public FontFamily? NoteFontFamily { get; set; }
     
-    public ICollection<MessageStickerStyle>? Stickers { get; set; }
+    public ICollection<ArchiveSticker> ArchivedStickers { get; set; } = new List<ArchiveSticker>();
+    // public ICollection<StickerStyle>? Stickers { get; set; }
+    // public ICollection<StickerUrl>? StickerUrls { get; set; }
 }
 
 public class PrivateArchiveModelCreation : IModelCreationSettings<PrivateArchive> {

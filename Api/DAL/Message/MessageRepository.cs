@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Api.DAL;
 
 public abstract class MessageRepository<T> : DatabaseRepository<T> where T : class {
-    protected DbSet<MessageReaction> _reactions;
+    protected DbSet<Reaction> _reactions;
     protected DbSet<Message> _messages;
 
     protected MessageRepository(AppDbContext context) : base(context) {
