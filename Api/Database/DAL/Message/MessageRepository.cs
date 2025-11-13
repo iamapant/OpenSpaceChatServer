@@ -47,7 +47,7 @@ public abstract class MessageRepository<T> : DatabaseRepository<T> where T : cla
 
             return new(
                 await _messages.OfType<PublicMessage>()
-                               .Where(e => e.Channels.Any(c => c.Id == id))
+                               // .Where(e => e.Channels.Any(c => c.Id == id))
                                .ToListAsync());
         } catch (Exception e) { return new(e); }
     } //Also get public archives. Archives are cast to public message

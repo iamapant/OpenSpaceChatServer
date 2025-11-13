@@ -21,9 +21,9 @@ public class FrameOptions {
     public const string DefaultId = "019a62f1-51a2-71c7-94ce-78748709c6f4";
     public static Color DefaultColorPrimary = Color.White;
     public static Color DefaultColorSecondary = Color.DodgerBlue;
-    public ICollection<UserInfo> UserDefaults { get; set; } = new List<UserInfo>();
-    public ICollection<PrivateArchive> PrivateArchives { get; set; } = new List<PrivateArchive>();
-    public ICollection<PublicArchive> PublicArchives { get; set; } = new List<PublicArchive>();
+    
+    public ICollection<MessageDecoration> Messages { get; set; } = new List<MessageDecoration>();
+    public ICollection<UserDecoration> Users { get; set; } = new List<UserDecoration>();
 }
 public class FrameOptionsModelCreation : IModelCreationSettings<FrameOptions> {
     public void OnModelCreating(EntityTypeBuilder<FrameOptions> builder, ModelBuilder mb) {

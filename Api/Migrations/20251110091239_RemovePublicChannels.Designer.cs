@@ -3,6 +3,7 @@ using System;
 using Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110091239_RemovePublicChannels")]
+    partial class RemovePublicChannels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,37 +282,6 @@ namespace Api.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Api.Database.Models.Decoration", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FontFamilyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FontStyleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FrameId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("FrameOptionsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FontFamilyId");
-
-                    b.HasIndex("FontStyleId");
-
-                    b.HasIndex("FrameId");
-
-                    b.HasIndex("FrameOptionsId");
-
-                    b.ToTable("Decorations");
-                });
-
             modelBuilder.Entity("Api.Database.Models.FontFamily", b =>
                 {
                     b.Property<Guid>("Id")
@@ -534,44 +506,6 @@ namespace Api.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("Api.Database.Models.MessageDecoration", b =>
-                {
-                    b.Property<string>("MessageId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<Guid>("DecorationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FontFamilyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FontStyleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FrameId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FrameOptionsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("MessageId", "DecorationId");
-
-                    b.HasIndex("DecorationId");
-
-                    b.HasIndex("FontFamilyId");
-
-                    b.HasIndex("FontStyleId");
-
-                    b.HasIndex("FrameId");
-
-                    b.HasIndex("FrameOptionsId");
-
-                    b.HasIndex("MessageId");
-
-                    b.ToTable("MessageDecorations");
-                });
-
             modelBuilder.Entity("Api.Database.Models.OldPassword", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -766,35 +700,6 @@ namespace Api.Migrations
                     b.ToTable("SupportTicketData");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.SupportTicketResponse", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CuratorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Response")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("SupportTicketId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CuratorId");
-
-                    b.HasIndex("SupportTicketId");
-
-                    b.ToTable("SupportTicketResponses");
-                });
-
             modelBuilder.Entity("Api.Database.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -876,44 +781,6 @@ namespace Api.Migrations
                     b.ToTable("Blacklists");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.UserDecoration", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("DecorationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FontFamilyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FontStyleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FrameId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("FrameOptionsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("UserId", "DecorationId");
-
-                    b.HasIndex("DecorationId");
-
-                    b.HasIndex("FontFamilyId");
-
-                    b.HasIndex("FontStyleId");
-
-                    b.HasIndex("FrameId");
-
-                    b.HasIndex("FrameOptionsId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserDecorations");
-                });
-
             modelBuilder.Entity("Api.Database.Models.UserInfo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -952,6 +819,18 @@ namespace Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<Guid?>("FontFamilyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("FontStyleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("FrameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("FrameOptionsId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("LastName")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -969,6 +848,14 @@ namespace Api.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.HasIndex("FontFamilyId");
+
+                    b.HasIndex("FontStyleId");
+
+                    b.HasIndex("FrameId");
+
+                    b.HasIndex("FrameOptionsId");
+
                     b.HasIndex("Phone")
                         .IsUnique();
 
@@ -983,6 +870,42 @@ namespace Api.Migrations
                             FirstName = "admin",
                             Updated = new DateTime(1, 1, 1, 1, 1, 1, 0, DateTimeKind.Utc)
                         });
+                });
+
+            modelBuilder.Entity("Api.Database.Models.UserMessageDecoration", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("FrameId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("FrameOptionsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("MessageColorPrimary")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("MessageColorSecondary")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("NoteFontFamilyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("NoteFontStyleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("FrameId");
+
+                    b.HasIndex("FrameOptionsId");
+
+                    b.HasIndex("NoteFontFamilyId");
+
+                    b.HasIndex("NoteFontStyleId");
+
+                    b.ToTable("UserMessageDecorations");
                 });
 
             modelBuilder.Entity("Api.Database.Models.UserTimeout", b =>
@@ -1043,14 +966,11 @@ namespace Api.Migrations
                     b.Property<Guid>("ArchivedUserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DecorationId")
+                    b.Property<Guid?>("FrameId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("DecorationMessageId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("DecorationTempId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("FrameOptionsId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsPublic")
                         .HasColumnType("boolean")
@@ -1060,9 +980,21 @@ namespace Api.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<Guid?>("NoteFontFamilyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("NoteFontStyleId")
+                        .HasColumnType("uuid");
+
                     b.HasIndex("ArchivedUserId");
 
-                    b.HasIndex("DecorationTempId");
+                    b.HasIndex("FrameId");
+
+                    b.HasIndex("FrameOptionsId");
+
+                    b.HasIndex("NoteFontFamilyId");
+
+                    b.HasIndex("NoteFontStyleId");
 
                     b.ToTable("PrivateArchives");
                 });
@@ -1071,20 +1003,29 @@ namespace Api.Migrations
                 {
                     b.HasBaseType("Api.Database.Models.PublicMessage");
 
-                    b.Property<Guid?>("DecorationId")
+                    b.Property<Guid?>("FrameId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("DecorationMessageId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("DecorationTempId1")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("FrameOptionsId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Note")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.HasIndex("DecorationTempId1");
+                    b.Property<Guid?>("NoteFontFamilyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("NoteFontStyleId")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("FrameId");
+
+                    b.HasIndex("FrameOptionsId");
+
+                    b.HasIndex("NoteFontFamilyId");
+
+                    b.HasIndex("NoteFontStyleId");
 
                     b.HasIndex("LandmarkId", "Created");
 
@@ -1126,41 +1067,6 @@ namespace Api.Migrations
                     b.Navigation("StickerUrl");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.Decoration", b =>
-                {
-                    b.HasOne("Api.Database.Models.FontFamily", "FontFamily")
-                        .WithMany()
-                        .HasForeignKey("FontFamilyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.FontStyle", "FontStyle")
-                        .WithMany()
-                        .HasForeignKey("FontStyleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.Frame", "Frame")
-                        .WithMany()
-                        .HasForeignKey("FrameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.FrameOptions", "FrameOptions")
-                        .WithMany()
-                        .HasForeignKey("FrameOptionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FontFamily");
-
-                    b.Navigation("FontStyle");
-
-                    b.Navigation("Frame");
-
-                    b.Navigation("FrameOptions");
-                });
-
             modelBuilder.Entity("Api.Database.Models.Inbox", b =>
                 {
                     b.HasOne("Api.Database.Models.PrivateMessage", "PinnedMessage")
@@ -1184,41 +1090,6 @@ namespace Api.Migrations
                     b.Navigation("Landmark");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Api.Database.Models.MessageDecoration", b =>
-                {
-                    b.HasOne("Api.Database.Models.Decoration", "Decoration")
-                        .WithMany("Messages")
-                        .HasForeignKey("DecorationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.FontFamily", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("FontFamilyId");
-
-                    b.HasOne("Api.Database.Models.FontStyle", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("FontStyleId");
-
-                    b.HasOne("Api.Database.Models.Frame", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("FrameId");
-
-                    b.HasOne("Api.Database.Models.FrameOptions", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("FrameOptionsId");
-
-                    b.HasOne("Api.Database.Models.Message", "Message")
-                        .WithMany()
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Decoration");
-
-                    b.Navigation("Message");
                 });
 
             modelBuilder.Entity("Api.Database.Models.OldPassword", b =>
@@ -1273,25 +1144,6 @@ namespace Api.Migrations
                     b.Navigation("SupportTicket");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.SupportTicketResponse", b =>
-                {
-                    b.HasOne("Api.Database.Models.User", "Curator")
-                        .WithMany()
-                        .HasForeignKey("CuratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.SupportTicket", "SupportTicket")
-                        .WithMany("Responses")
-                        .HasForeignKey("SupportTicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Curator");
-
-                    b.Navigation("SupportTicket");
-                });
-
             modelBuilder.Entity("Api.Database.Models.User", b =>
                 {
                     b.HasOne("Api.Database.Models.Role", "Role")
@@ -1320,48 +1172,64 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.UserDecoration", b =>
+            modelBuilder.Entity("Api.Database.Models.UserInfo", b =>
                 {
-                    b.HasOne("Api.Database.Models.Decoration", "Decoration")
-                        .WithMany("Users")
-                        .HasForeignKey("DecorationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Api.Database.Models.FontFamily", null)
-                        .WithMany("Users")
+                        .WithMany("UserDefaults")
                         .HasForeignKey("FontFamilyId");
 
                     b.HasOne("Api.Database.Models.FontStyle", null)
-                        .WithMany("Users")
+                        .WithMany("UserDefaults")
                         .HasForeignKey("FontStyleId");
 
                     b.HasOne("Api.Database.Models.Frame", null)
-                        .WithMany("Users")
+                        .WithMany("UserDefaults")
                         .HasForeignKey("FrameId");
 
                     b.HasOne("Api.Database.Models.FrameOptions", null)
-                        .WithMany("Users")
+                        .WithMany("UserDefaults")
                         .HasForeignKey("FrameOptionsId");
 
-                    b.HasOne("Api.Database.Models.User", "User")
-                        .WithOne("Decoration")
-                        .HasForeignKey("Api.Database.Models.UserDecoration", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Decoration");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Api.Database.Models.UserInfo", b =>
-                {
                     b.HasOne("Api.Database.Models.User", "User")
                         .WithOne("UserInfo")
                         .HasForeignKey("Api.Database.Models.UserInfo", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Api.Database.Models.UserMessageDecoration", b =>
+                {
+                    b.HasOne("Api.Database.Models.Frame", "Frame")
+                        .WithMany()
+                        .HasForeignKey("FrameId");
+
+                    b.HasOne("Api.Database.Models.FrameOptions", "FrameOptions")
+                        .WithMany()
+                        .HasForeignKey("FrameOptionsId");
+
+                    b.HasOne("Api.Database.Models.FontFamily", "NoteFontFamily")
+                        .WithMany()
+                        .HasForeignKey("NoteFontFamilyId");
+
+                    b.HasOne("Api.Database.Models.FontStyle", "NoteFontStyle")
+                        .WithMany()
+                        .HasForeignKey("NoteFontStyleId");
+
+                    b.HasOne("Api.Database.Models.User", "User")
+                        .WithOne("MessageDecoration")
+                        .HasForeignKey("Api.Database.Models.UserMessageDecoration", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Frame");
+
+                    b.Navigation("FrameOptions");
+
+                    b.Navigation("NoteFontFamily");
+
+                    b.Navigation("NoteFontStyle");
 
                     b.Navigation("User");
                 });
@@ -1421,65 +1289,102 @@ namespace Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Api.Database.Models.Frame", "Frame")
+                        .WithMany("PrivateArchives")
+                        .HasForeignKey("FrameId");
+
+                    b.HasOne("Api.Database.Models.FrameOptions", "FrameOptions")
+                        .WithMany("PrivateArchives")
+                        .HasForeignKey("FrameOptionsId");
+
                     b.HasOne("Api.Database.Models.PrivateMessage", null)
                         .WithOne()
                         .HasForeignKey("Api.Database.Models.PrivateArchive", "Id");
 
-                    b.HasOne("Api.Database.Models.MessageDecoration", "Decoration")
-                        .WithMany()
-                        .HasForeignKey("DecorationMessageId", "DecorationId");
+                    b.HasOne("Api.Database.Models.FontFamily", "NoteFontFamily")
+                        .WithMany("PrivateArchives")
+                        .HasForeignKey("NoteFontFamilyId");
+
+                    b.HasOne("Api.Database.Models.FontStyle", "NoteFontStyle")
+                        .WithMany("PrivateArchives")
+                        .HasForeignKey("NoteFontStyleId");
 
                     b.Navigation("ArchivedUser");
 
-                    b.Navigation("Decoration");
+                    b.Navigation("Frame");
+
+                    b.Navigation("FrameOptions");
+
+                    b.Navigation("NoteFontFamily");
+
+                    b.Navigation("NoteFontStyle");
                 });
 
             modelBuilder.Entity("Api.Database.Models.PublicArchive", b =>
                 {
+                    b.HasOne("Api.Database.Models.Frame", "Frame")
+                        .WithMany("PublicArchives")
+                        .HasForeignKey("FrameId");
+
+                    b.HasOne("Api.Database.Models.FrameOptions", "FrameOptions")
+                        .WithMany("PublicArchives")
+                        .HasForeignKey("FrameOptionsId");
+
                     b.HasOne("Api.Database.Models.PublicMessage", null)
                         .WithOne()
                         .HasForeignKey("Api.Database.Models.PublicArchive", "Id");
 
-                    b.HasOne("Api.Database.Models.MessageDecoration", "Decoration")
-                        .WithMany()
-                        .HasForeignKey("DecorationMessageId", "DecorationId");
+                    b.HasOne("Api.Database.Models.FontFamily", "NoteFontFamily")
+                        .WithMany("PublicArchives")
+                        .HasForeignKey("NoteFontFamilyId");
 
-                    b.Navigation("Decoration");
-                });
+                    b.HasOne("Api.Database.Models.FontStyle", "NoteFontStyle")
+                        .WithMany("PublicArchives")
+                        .HasForeignKey("NoteFontStyleId");
 
-            modelBuilder.Entity("Api.Database.Models.Decoration", b =>
-                {
-                    b.Navigation("Messages");
+                    b.Navigation("Frame");
 
-                    b.Navigation("Users");
+                    b.Navigation("FrameOptions");
+
+                    b.Navigation("NoteFontFamily");
+
+                    b.Navigation("NoteFontStyle");
                 });
 
             modelBuilder.Entity("Api.Database.Models.FontFamily", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("PrivateArchives");
 
-                    b.Navigation("Users");
+                    b.Navigation("PublicArchives");
+
+                    b.Navigation("UserDefaults");
                 });
 
             modelBuilder.Entity("Api.Database.Models.FontStyle", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("PrivateArchives");
 
-                    b.Navigation("Users");
+                    b.Navigation("PublicArchives");
+
+                    b.Navigation("UserDefaults");
                 });
 
             modelBuilder.Entity("Api.Database.Models.Frame", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("PrivateArchives");
 
-                    b.Navigation("Users");
+                    b.Navigation("PublicArchives");
+
+                    b.Navigation("UserDefaults");
                 });
 
             modelBuilder.Entity("Api.Database.Models.FrameOptions", b =>
                 {
-                    b.Navigation("Messages");
+                    b.Navigation("PrivateArchives");
 
-                    b.Navigation("Users");
+                    b.Navigation("PublicArchives");
+
+                    b.Navigation("UserDefaults");
                 });
 
             modelBuilder.Entity("Api.Database.Models.Inbox", b =>
@@ -1515,8 +1420,6 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Database.Models.SupportTicket", b =>
                 {
                     b.Navigation("Data");
-
-                    b.Navigation("Responses");
                 });
 
             modelBuilder.Entity("Api.Database.Models.User", b =>
@@ -1525,7 +1428,7 @@ namespace Api.Migrations
 
                     b.Navigation("Blacklists");
 
-                    b.Navigation("Decoration")
+                    b.Navigation("MessageDecoration")
                         .IsRequired();
 
                     b.Navigation("OldPasswords");

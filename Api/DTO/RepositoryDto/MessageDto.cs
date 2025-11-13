@@ -8,6 +8,8 @@ namespace Api.DTO;
 
 public class MessageDto {
     [Required]
+    public string Id { get; set; } = null!;
+    [Required]
     public string UserId { get; set; } = null!;
 
     [Required, MaxLength(20)]
@@ -33,7 +35,7 @@ public class PrivateMessageDto : MessageDto, IAddDto<PrivateMessage> {
         }
 
         return new PrivateMessage {
-            Id = Message.GetId(UserId, Position)
+            Id = Id
           , UserId = userId
           , InboxId = inboxId
           , ContentType = ContentType
@@ -45,19 +47,13 @@ public class PrivateMessageDto : MessageDto, IAddDto<PrivateMessage> {
     }
 }
 
-public class ArchivePrivateMessageDto : IAddDto<PrivateArchive> {
-    [Required]
-    public string Id { get; set; } = null!;
+public class ArchivePrivateMessageDto : ArchiveMessageDto , IAddDto<PrivateArchive> {
 
     [Required]
     public string ArchivedUserId { get; set; } = null!;
 
     public bool IsPublic { get; set; } = true;
     public string? Note { get; set; }
-    public MessageFrameDto? Frame { get; set; }
-    public FontStyleDto? Style { get; set; }
-    public string? FontFamily { get; set; }
-    public ICollection<ArchiveStickerDto>? Stickers { get; set; }
 
     public PrivateArchive? Map() {
         if (!Guid.TryParse(ArchivedUserId, out var archivedUserId)) return null;
@@ -118,6 +114,7 @@ public class ArchivePrivateMessageDto : IAddDto<PrivateArchive> {
 }
 
 public class PublicMessageDto : MessageDto, IAddDto<PublicMessage> {
+    public ICollection<string>? ChannelIds { get; set; }
     public PublicMessage? Map() {
         if (!Guid.TryParse(UserId, out var userId)) return null;
         var lid = Guid.Empty;
@@ -126,7 +123,7 @@ public class PublicMessageDto : MessageDto, IAddDto<PublicMessage> {
         }
 
         return new PublicMessage {
-            Id = Message.GetId(UserId, Position)
+            Id = Id
           , UserId = userId
           , ContentType = ContentType
           , Content = Content
@@ -137,20 +134,23 @@ public class PublicMessageDto : MessageDto, IAddDto<PublicMessage> {
     }
 }
 
-public class ArchivePublicMessageDto : IAddDto<PublicArchive> {
+public class ArchiveMessageDto {
     [Required]
     public string Id { get; set; } = null!;
     [Required]
     public string UserId { get; set; } = null!;
+    public MessageFrameDto? Frame { get; set; }
+    public FontStyleDto? Style { get; set; }
+    public string? FontFamily { get; set; }
+    public ICollection<StickerDto>? Stickers { get; set; }
+}
+
+public class ArchivePublicMessageDto : ArchiveMessageDto, IAddDto<PublicArchive> {
 
     [Required]
     public string ArchivedUserId { get; set; } = null!;
 
     public string? Note { get; set; }
-    public MessageFrameDto? Frame { get; set; }
-    public FontStyleDto? Style { get; set; }
-    public string? FontFamily { get; set; }
-    public ICollection<StickerDto>? Stickers { get; set; }
 
     public PublicArchive? Map() {
         if (!Guid.TryParse(ArchivedUserId, out var archivedUserId)

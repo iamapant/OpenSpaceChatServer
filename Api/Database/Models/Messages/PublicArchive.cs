@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Api.Database.Models;
 
 [Table("PublicArchives")]
-public class PublicArchive : PublicMessage, IArchive {
+public class PublicArchive : PublicMessage {
     [MaxLength(500)]
     public string? Note { get; set; }
     
-    [ForeignKey(nameof(Frame))]
-    public Guid? FrameId { get; set; }
-    public Frame? Frame { get; set; }
-
-    [ForeignKey(nameof(FrameOptions))]
-    public Guid? FrameOptionsId { get; set; }
-    public FrameOptions? FrameOptions { get; set; }
-    
-    [ForeignKey(nameof(NoteFontStyle))]
-    public Guid? NoteFontStyleId { get; set; }
-    public FontStyle? NoteFontStyle { get; set; }
-    
-    [ForeignKey(nameof(NoteFontFamily))]
-    public Guid? NoteFontFamilyId { get; set; }
-    public FontFamily? NoteFontFamily { get; set; }
+    public MessageDecoration? Decoration { get; set; }
     
     public ICollection<ArchiveSticker> ArchivedStickers { get; set; } = new List<ArchiveSticker>();
 }

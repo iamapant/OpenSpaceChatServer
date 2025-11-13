@@ -17,14 +17,14 @@ public class TimeoutDto : IAddDto<UserTimeout>, IUpdateDto<UserTimeout> {
                 || Guid.TryParse(ChannelId, out var channelId)) return null;
             return new UserTimeout {
                 UserId = userId
-              , ChannelId = channelId
+              // , ChannelId = channelId
               , TimeoutEnd = DateTime.UtcNow.AddHours(TimeoutPeriodInHour)
             };
         }catch { return null; }
     }
 
     public void Map(UserTimeout entity) {
-        if (Guid.TryParse(ChannelId, out var channelId)) entity.ChannelId = channelId;
+        // if (Guid.TryParse(ChannelId, out var channelId)) entity.ChannelId = channelId;
         entity.TimeoutEnd = DateTime.UtcNow.AddHours(TimeoutPeriodInHour);
     }
 }

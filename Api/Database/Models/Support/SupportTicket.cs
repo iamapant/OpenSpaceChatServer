@@ -27,6 +27,7 @@ public class SupportTicket {
     public Position? Position => Latitude != null && Longitude != null ? new ((double)Latitude, (double)Longitude) : null;
     
     public ICollection<SupportTicketData>? Data { get; set; }
+    public ICollection<SupportTicketResponse>? Responses { get; set; }
 }
 
 public class SupportTicketModelCreation : IModelCreationSettings<SupportTicket> {

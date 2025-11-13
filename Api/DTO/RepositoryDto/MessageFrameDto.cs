@@ -4,7 +4,7 @@ namespace Api.DTO;
 
 public class MessageFrameDto{
     [Required]
-    public string FrameId { get; set; } = null!;
+    public string FrameName { get; set; } = null!;
     public int? PrimaryColorArgb { get; set; }
     public int? SecondaryColorArgb { get; set; }
 }

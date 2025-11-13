@@ -5,7 +5,7 @@ using Api.Database.Models;
 
 namespace Api.Providers.Token;
 
-public class RefreshTokenProvider(GlobalSettings globalSettings) : ITokenProvider<string> {
+public class RefreshTokenProvider(IGlobalSettings globalSettings) : ITokenProvider<string> {
     public ValidationResult<string> Validate(string? token) {
         if (string.IsNullOrEmpty(token)) return new (new ArgumentNullException(token));
         if (!TryParse(token, out var parts))  return new (new FormatException("Refresh token format"), this);

@@ -28,17 +28,18 @@ public class User {
     
     public UserTimeout? Timeout { get; set; }
     public UserInfo UserInfo { get; set; } = null!;
-    public UserMessageDecoration MessageDecoration { get; set; } = null!;
+    // public UserMessageDecoration MessageDecoration { get; set; } = null!;
     [ForeignKey(nameof(Role))]
     public Guid RoleId { get; set; }
     public Role Role { get; set; } = null!;
     
     public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     
+    public UserDecoration Decoration { get; set; } = null!;
     public ICollection<UserBlacklist> Blacklists { get; set; } = new List<UserBlacklist>();
     public ICollection<UserBlacklist> BlacklistedBys { get; set; } = new List<UserBlacklist>();
     public ICollection<Inbox> Inboxes { get; set; } = new List<Inbox>();
-    public ICollection<Channel> Channels { get; set; } = new List<Channel>();
+    // public ICollection<Channel> Channels { get; set; } = new List<Channel>();
     public ICollection<OldPassword> OldPasswords { get; set; } = new List<OldPassword>();
 }
 

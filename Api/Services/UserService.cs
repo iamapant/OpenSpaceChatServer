@@ -32,7 +32,7 @@ public class UserService {
       , UserTimeoutRepository timeout
       , IEmailProvider email
       , JwtTokenProvider jwt
-       , IPushNotificationProvider notification) {
+      , IPushNotificationProvider notification) {
         _user = user;
         _globalSettings = globalSettings;
         _info = info;
@@ -62,12 +62,11 @@ public class UserService {
             (await _user.Add(user)).ThrowIfInvalid();
             var jwt = _jwt.Create(user
               , new {
-                    Id = user.Id
-                  , Email = dto.Email
-                  , Expire = TimeSpan.FromMinutes(
+                    Expire = TimeSpan.FromMinutes(
                         _globalSettings.Admin.CreateAccountTokenExpireInMinute
                      ?? _globalSettings.Jwt.TokenExpireInMinute)
-                });
+                }
+            );
 
             // (await _email.Send(new CreateAccountMail(new CreateAccountMailDto {
             //     Id = user.Id.ToString(), Username = dto.Username, Password = pass
@@ -149,7 +148,8 @@ public class UserService {
         var res = new ValidationResult(this);
         try {
             if (_user.Where(e => e.Name.Equals(username
-                  , StringComparison.OrdinalIgnoreCase)).Any())
+                       , StringComparison.OrdinalIgnoreCase))
+                     .Any())
                 throw new InvalidOperationException("Username already exists.");
             if ((await _info.GetByEmail(username)) != null)
                 throw new InvalidOperationException("Username already exists.");
@@ -170,8 +170,8 @@ public class UserService {
                 res.AddError(new Exception(
                     "Username can only contain letters, numbers, and underscores."));
             if (_globalSettings.Admin.GetUsernameExcludedWords()
-                         .Any(w => username.Contains(w
-                           , StringComparison.OrdinalIgnoreCase)))
+                               .Any(w => username.Contains(w
+                                 , StringComparison.OrdinalIgnoreCase)))
                 res.AddError(new Exception(
                     $"Username cannot contain words: {string.Join(", ", _globalSettings.Admin.GetUsernameExcludedWords())}."));
         } catch (Exception ex) { res.AddError(ex); }
@@ -196,12 +196,13 @@ public class UserService {
              && !Regex.IsMatch(password, "[\\d]"))
                 res.AddError(new Exception("Password must contain at least 1 number."));
             if (_globalSettings.Admin.PasswordContainsSpecial
-             && !Regex.IsMatch(password, $"[{_globalSettings.Admin.PasswordAllowedSpecials}]"))
+             && !Regex.IsMatch(password
+                  , $"[{_globalSettings.Admin.PasswordAllowedSpecials}]"))
                 res.AddError(new Exception(
                     $"Password must contain at least 1 Special character '{_globalSettings.Admin.PasswordAllowedSpecials}'."));
             if (_globalSettings.Admin.GetPasswordExcludedWords()
-                         .Any(w => password.Contains(w
-                           , StringComparison.OrdinalIgnoreCase)))
+                               .Any(w => password.Contains(w
+                                 , StringComparison.OrdinalIgnoreCase)))
                 res.AddError(new Exception(
                     $"Password cannot contain words: {string.Join(", ", _globalSettings.Admin.GetPasswordExcludedWords())}."));
             if (!Regex.IsMatch(password, "^[A-Za-z\\d@$!%*?&._-]+$"))
@@ -218,18 +219,18 @@ public class UserService {
         string id) {
         try {
             var blacklists = await _blacklist.GetBlacklist(id);
-            return new (blacklists.Select(e => e.BlacklistId).ToList());
-        } catch (Exception ex) { return new (ex); }
+            return new(blacklists.Select(e => e.BlacklistId).ToList());
+        } catch (Exception ex) { return new(ex); }
     }
-    
+
     public async Task<ValidationResult<ICollection<Guid>>> GetBlacklistedByUserIds(
         string id) {
         try {
             var blacklists = await _blacklist.GetBlacklistedBy(id);
-            return new (blacklists.Select(e => e.Id).ToList());
-        } catch (Exception ex) { return new (ex); }
+            return new(blacklists.Select(e => e.Id).ToList());
+        } catch (Exception ex) { return new(ex); }
     }
-    
+
     public async Task DeBlacklistUser(DeBlacklistDto dto) {
         try {
             var user = await FindOrThrow(dto.UserId);
@@ -346,12 +347,10 @@ public class UserService {
       , params Expression<Func<User, T?>>[] includings) where T : class {
         try {
             var user = await FindOrThrow(id);
-            foreach (var include in includings) {
-                await _user.Load(user, include);
-            }
-            
+            foreach (var include in includings) { await _user.Load(user, include); }
+
             return new(user);
-        } catch (Exception ex) { return new (ex); }
+        } catch (Exception ex) { return new(ex); }
     }
 
     public async Task RushDeletingUsers() {
@@ -371,6 +370,7 @@ public class UserService {
             var u = await _user.Find(id);
             if (u != null) result.Add(u);
         }
+
         return result;
     }
 
@@ -381,22 +381,21 @@ public class UserService {
             var u = await _user.Find(id);
             if (u != null) result.Add(u);
         }
+
         return result;
     }
 
     public async Task<User?> FindByEmail(string email) {
         var list = await _info.GetByEmail(email);
-        return list.HasValue ? await _user.Find(list.Value) : null; 
+        return list.HasValue ? await _user.Find(list.Value) : null;
     }
 
     public async Task<User?> FindByPhoneNumber(string phone) {
         var list = await _info.GetByPhone(phone);
-        return list.HasValue ? await _user.Find(list.Value) : null; 
+        return list.HasValue ? await _user.Find(list.Value) : null;
     }
 
-    public async Task<User?> FindByName(string id) {
-        return await _user.FindByName(id);
-    }
+    public async Task<User?> FindByName(string id) { return await _user.FindByName(id); }
 
     private async Task<User> FindOrThrow(string id, string message = "User not found.") {
         var user = await _user.FindById(id);

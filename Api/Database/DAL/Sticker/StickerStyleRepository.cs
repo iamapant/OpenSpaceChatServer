@@ -16,7 +16,7 @@ public class StickerStyleRepository : DatabaseRepository<StickerStyle> {
         } catch (Exception ex) { log.LogWarning(ex, "Could not remove unused font"); }
     }
 
-    public async Task<StickerStyle> GetOrSetStyle(Position position, Position size, float rotation) {
+    public async Task<StickerStyle> GetOrSet(Position position, Position size, float rotation) {
         var obj = await _entity.FirstOrDefaultAsync(e =>
             e.Position == position && e.Size == size && Math.Abs(rotation - e.Rotation) < 0.000000001);
         if (obj == null) {

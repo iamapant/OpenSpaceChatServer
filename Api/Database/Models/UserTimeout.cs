@@ -9,13 +9,13 @@ namespace Api.Database.Models;
 public class UserTimeout {
     [Key, ForeignKey(nameof(User))]
     public Guid UserId { get; set; }
-    [ForeignKey(nameof(Channel))]
-    public Guid ChannelId { get; set; }
+    // [ForeignKey(nameof(Channel))]
+    // public Guid ChannelId { get; set; }
     
     public DateTime TimeoutEnd { get; set; }
     
     public User User { get; set; } = null!;
-    public Channel Channel { get; set; } = null!;
+    // public Channel Channel { get; set; } = null!;
 }
 
 public class UserTimeoutModelCreation : IModelCreationSettings<UserTimeout> {

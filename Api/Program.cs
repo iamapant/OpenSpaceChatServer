@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using Api.DAL;
 using Api.Database;
+using Api.IntraServer.GRpc;
 using Api.Providers.Token;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,12 +21,7 @@ namespace Api
                 o.AddDebug();
             });
             builder.Services.AddDbContext<AppDbContext>();
-            builder.Services.AddSingleton<IGlobalSettings, GlobalSettings>();
-            builder.Services.AddScoped<RefreshTokenProvider>();
-            
             #region jwt
-            builder.Services.AddScoped<JwtTokenProvider>();
-            
             var handler = new JwtSecurityTokenHandler() {
                 //TODO: implementation
             };
@@ -36,9 +32,14 @@ namespace Api
             };
             builder.Services.AddSingleton(tvp);
             #endregion
+            builder.Services.AddScoped<IGlobalSettings, GlobalSettings>();
+            
+            builder.Services.AddScoped<JwtTokenProvider>();
+            builder.Services.AddScoped<RefreshTokenProvider>();
             
             builder.Services.AddRepositories();
             
+            builder.Services.AddGrpc();
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
@@ -56,6 +57,7 @@ namespace Api
             app.UseAuthorization();
 
 
+            app.MapGrpcService<RegionalAuthValidation>();
             app.MapControllers();
 
             app.Run();

@@ -1,4 +1,5 @@
 using Api.Database.Models;
+using Api.DTO;
 
 namespace Api.Providers.Notification;
 
@@ -9,6 +10,6 @@ public interface IPushNotificationProvider {
 }
 
 public abstract record NotificationMessage(string Message);
-public abstract record MessageReceived(User sender, string Message) : NotificationMessage(Message);
-public record PublicMessageReceived(User sender, string Message) : MessageReceived(sender, Message);
-public record PrivateMessageReceived(User sender, string Message) :  MessageReceived(sender, Message);
+public abstract record MessageReceived(string Message, MessageMetadata metadata) : NotificationMessage(Message);
+public record PublicMessageReceived(string Message, MessageMetadata metadata) : MessageReceived(Message, metadata);
+public record PrivateMessageReceived(string Message, MessageMetadata metadata) :  MessageReceived(Message, metadata);

@@ -27,12 +27,8 @@ public class FontStyle {
     public const float DefaultLetterSpacing = 0f;
     public const float DefaultLineSpacing = 0f;
     
-    
-    public ICollection<UserInfo> UserDefaults { get; set; } = new List<UserInfo>();
-    // public ICollection<PrivateMessage> PrivateMessages { get; set; } = new List<PrivateMessage>();
-    public ICollection<PrivateArchive> PrivateArchives { get; set; } = new List<PrivateArchive>();
-    // public ICollection<PublicMessage> PublicMessages { get; set; } = new List<PublicMessage>();
-    public ICollection<PublicArchive> PublicArchives { get; set; } = new List<PublicArchive>();
+    public ICollection<MessageDecoration> Messages { get; set; } = new List<MessageDecoration>();
+    public ICollection<UserDecoration> Users { get; set; } = new List<UserDecoration>();
 }
 
 public class FontStyleModelCreation : IModelCreationSettings<FontStyle> {

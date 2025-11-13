@@ -30,14 +30,6 @@ public abstract class Message {
     public Guid? LandmarkId { get; set; }
     [ForeignKey(nameof(LandmarkId))]
     public Landmark? Landmark { get; set; }
-
-    public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
     
-    public string GetId() {
-        return GetId(UserId?.ToString() ?? "0", Position);
-    }
-
-    public static string GetId(string userId, Position position) {
-        return $"{userId}_{position.Latitude}.{position.Longitude}_{Guid.CreateVersion7().ToString()}";
-    }
+    public ICollection<Reaction> Reactions { get; set; } = new List<Reaction>();
 }

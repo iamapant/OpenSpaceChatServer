@@ -3,6 +3,7 @@ using System;
 using Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110100610_NormalizeDecoration")]
+    partial class NormalizeDecoration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -766,35 +769,6 @@ namespace Api.Migrations
                     b.ToTable("SupportTicketData");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.SupportTicketResponse", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CuratorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Response")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("SupportTicketId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CuratorId");
-
-                    b.HasIndex("SupportTicketId");
-
-                    b.ToTable("SupportTicketResponses");
-                });
-
             modelBuilder.Entity("Api.Database.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1273,25 +1247,6 @@ namespace Api.Migrations
                     b.Navigation("SupportTicket");
                 });
 
-            modelBuilder.Entity("Api.Database.Models.SupportTicketResponse", b =>
-                {
-                    b.HasOne("Api.Database.Models.User", "Curator")
-                        .WithMany()
-                        .HasForeignKey("CuratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Database.Models.SupportTicket", "SupportTicket")
-                        .WithMany("Responses")
-                        .HasForeignKey("SupportTicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Curator");
-
-                    b.Navigation("SupportTicket");
-                });
-
             modelBuilder.Entity("Api.Database.Models.User", b =>
                 {
                     b.HasOne("Api.Database.Models.Role", "Role")
@@ -1515,8 +1470,6 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Database.Models.SupportTicket", b =>
                 {
                     b.Navigation("Data");
-
-                    b.Navigation("Responses");
                 });
 
             modelBuilder.Entity("Api.Database.Models.User", b =>

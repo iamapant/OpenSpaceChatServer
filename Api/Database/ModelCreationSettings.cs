@@ -20,8 +20,8 @@ public interface IModelCreationSettings<T> where T : class {
 
 public static class ModelCreationRepository {
     private static Dictionary<Type, Type> _dict = new() {
-        [typeof(Channel)] = typeof(ChannelModelCreation),
-        [typeof(ChannelSetting)] = typeof(ChannelSettingModelCreation),
+        // [typeof(Channel)] = typeof(ChannelModelCreation),
+        // [typeof(ChannelSetting)] = typeof(ChannelSettingModelCreation),
         [typeof(FontFamily)] = typeof(FontFamilyModelCreation),
         [typeof(FontStyle)] = typeof(FontStyleModelCreation),
         [typeof(Inbox)] = typeof(InboxModelCreation),
@@ -44,6 +44,11 @@ public static class ModelCreationRepository {
         [typeof(UserInfo)] = typeof(UserInfoModelCreation),
         [typeof(StickerUrl)] = typeof(StickerUrlModelCreation),
         [typeof(ArchiveSticker)] = typeof(ArchiveStickerModelCreation),
+        // [typeof(UserMessageDecoration)] = typeof(UserMessageDecorationModelCreation),
+        [typeof(Decoration)] = typeof(DecorationModelCreation),
+        [typeof(UserDecoration)] = typeof(UserDecorationModelCreation),
+        [typeof(MessageDecoration)] = typeof(MessageDecorationModelCreation),
+        [typeof(SupportTicketResponse)] = typeof(SupportTicketResponseModelCreation),
     };
 
     public static void AddModelCreationFor<TTable, TModelCreation>()

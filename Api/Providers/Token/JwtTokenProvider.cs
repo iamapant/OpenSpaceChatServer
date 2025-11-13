@@ -49,12 +49,13 @@ public class JwtTokenProvider
 
     private JwtSettings _settings;
 
-    public JwtTokenProvider(GlobalSettings globalSettings) { _settings = globalSettings.Jwt; }
+    public JwtTokenProvider(IGlobalSettings globalSettings) { _settings = globalSettings.Jwt; }
 
     public JwtSecurityToken Create(User user, object? keys = null) {
         var r = keys.Reflect();
         var claims = new List<Claim>();
-        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()));
+        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+        claims.Add(new Claim(ClaimTypes.Role, user.RoleId.ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
         AdditionalClaims();
 

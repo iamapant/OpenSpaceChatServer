@@ -16,7 +16,7 @@ public class StickerUrlRepository : DatabaseRepository<StickerUrl> {
         } catch (Exception ex) { log.LogWarning(ex, "Could not remove unused font"); }
     }
 
-    public async Task<StickerUrl> GetOrSetUrl(string url) {
+    public async Task<StickerUrl> GetOrSet(string url) {
         var obj = await _entity.FirstOrDefaultAsync(e =>
             e.Url.Equals(url, StringComparison.OrdinalIgnoreCase));
         if (obj == null) {
