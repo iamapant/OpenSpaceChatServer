@@ -1,0 +1,7 @@
+﻿services:
+  regional:
+    image: regional
+    build:
+      context: .
+      dockerfile: Regional/Dockerfile
+
