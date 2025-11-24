@@ -9,19 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Providers.Token;
 
-public class JwtTokenProvider
-    : ITokenProvider<JwtSecurityToken> {
-    public ValidationResult<JwtSecurityToken> Validate(string? token) {
-        var res = new ValidationResult<JwtSecurityToken>();
-        if (string.IsNullOrWhiteSpace(token))
-            return new(new ArgumentNullException(token), this);
-
-        var claims = ValidateToken(token, out var t);
-        if (t is not JwtSecurityToken jwtToken)
-            res.AddError(new Exception("Invalid token"));
-        else res.Value = jwtToken;
-        return res;
-    }
+public class JwtTokenProvider {
 
     public ClaimsPrincipal? ValidateToken(string? token, out SecurityToken? t) {
         if (_settings.Handler == null || _settings.TokenValidationParameters == null) {
@@ -36,8 +24,7 @@ public class JwtTokenProvider
           , out var validatedToken);
 
         if (validatedToken is not JwtSecurityToken jwtToken
-         || !jwtToken.Header.Alg.Equals(_settings.Algorithm
-              , StringComparison.InvariantCultureIgnoreCase)) {
+         || !jwtToken.Header.Alg.Equals(_settings.Algorithm, StringComparison.InvariantCultureIgnoreCase)) {
             Debug.WriteLine("Invalid token");
             t = null;
             return null;
@@ -51,13 +38,26 @@ public class JwtTokenProvider
 
     public JwtTokenProvider(IGlobalSettings globalSettings) { _settings = globalSettings.Jwt; }
 
-    public JwtSecurityToken Create(User user, object? keys = null) {
-        var r = keys.Reflect();
+    public JwtSecurityToken Create(JwtClaims user) {
         var claims = new List<Claim>();
-        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-        claims.Add(new Claim(ClaimTypes.Role, user.RoleId.ToString()));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
+        claims.Add(new Claim(JwtRegisteredClaimNames.Name, user.Name));
+        claims.Add(new Claim(ClaimTypes.Role, user.Role));
         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-        AdditionalClaims();
+        claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToString("o")));
+
+        //Remove duplicated claims
+        var additional = user.Additional.Where(e => 
+            e.Type != JwtRegisteredClaimNames.Sub
+         && e.Type != JwtRegisteredClaimNames.Name 
+         && e.Type != ClaimTypes.Role 
+         && e.Type != JwtRegisteredClaimNames.Jti 
+         && e.Type != JwtRegisteredClaimNames.Iat);
+        
+        
+        claims.AddRange(additional.Select(c => new Claim(c.Type, c.Value)));
+        if (!claims.Any(c => c.Type is JwtRegisteredClaimNames.Exp or ClaimTypes.Expiration)) 
+            claims.Add(new Claim(JwtRegisteredClaimNames.Exp, DateTimeOffset.UtcNow.AddMinutes(_settings.TokenExpireInMinute).ToString("o")));
 
         return new JwtSecurityToken(
             issuer: _settings.Issuer
@@ -65,60 +65,8 @@ public class JwtTokenProvider
           , claims: claims
           , notBefore: DateTime.UtcNow
           , signingCredentials: _settings.SigningCredentials);
-
-        void AdditionalClaims() {
-            if (!r.HasValue) return;
-            if (r.TryGetProperty("expire", out object? t, false)) {
-                switch (t) {
-                    case TimeSpan ts:
-                        claims.Add(
-                            new Claim(JwtRegisteredClaimNames.Exp
-                              , DateTimeOffset.UtcNow.Add(ts).ToUnixTimeSeconds().ToString()));
-                        break;
-                    case DateTime dt:
-                        claims.Add(new Claim(JwtRegisteredClaimNames.Exp, dt.ToString("o")));
-                        break;
-                }
-            }
-            if (r.TryGetProperty("email", out object? e, false)) {
-                switch (e) {
-                    case string email:
-                        claims.Add(new Claim(JwtRegisteredClaimNames.Email, email));
-                        break;
-                    case /*bool and*/ true:
-                        claims.Add(new Claim(JwtRegisteredClaimNames.Email
-                          , user.UserInfo.Email));
-                        break;
-                }
-            }
-
-            if (r.TryGetProperty("phone", out object? p, false)) {
-                switch (p) {
-                    case string phone:
-                        claims.Add(new Claim(JwtRegisteredClaimNames.PhoneNumber, phone));
-                        break;
-                    case true when user.UserInfo.Phone != null:
-                        claims.Add(new Claim(JwtRegisteredClaimNames.PhoneNumber
-                          , user.UserInfo.Phone));
-                        break;
-                }
-            }
-
-            //Other claims
-            var otherClaims = r.Properties()
-                               .Where(prop => 
-                                   !prop.Name.Contains("expire"
-                                     , StringComparison.OrdinalIgnoreCase)
-                                && !prop.Name.Contains("email"
-                                     , StringComparison.OrdinalIgnoreCase)
-                                && !prop.Name.Contains("phone"
-                                     , StringComparison.OrdinalIgnoreCase))
-                               .Select(prop => new KeyValuePair<string, string>(prop.Name
-                                 , prop.GetValue(keys)?.ToString() ?? ""))
-                               .Where(prop => prop.Value.Length > 0)
-                               .ToList();
-
-            claims.AddRange(otherClaims.Select(claim => new Claim(claim.Key, claim.Value)));
-        }
     }
+    
+    public record JwtClaims(string Id, string Name, string Role, params AdditionalClaims[] Additional);
+    public record AdditionalClaims(string Type, string Value);
 }

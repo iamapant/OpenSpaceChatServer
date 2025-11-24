@@ -19,7 +19,12 @@ public class MessageController {
         throw new NotImplementedException();
     }
 
-    [HttpPost("since/{date:datetime}/{inboxId:guid}")]
+    [HttpPost("{inboxId:guid}")]
+    public async Task<IActionResult> GetPrivateMessage(string inboxId) {
+        throw new NotImplementedException();
+    }
+
+    [HttpPost("{inboxId:guid}/since/{date:datetime}")]
     public async Task<IActionResult> GetPrivateMessageSince(string inboxId) {
         throw new NotImplementedException();
     }

@@ -5,14 +5,17 @@ using Api.DAL;
 using Api.Database;
 using Api.IntraServer.GRpc;
 using Api.Providers.Token;
+using Api.Secrets;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Api
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
+        public static async Task Main(string[] args) {
+            var secretProvider = new SecretProvider();
+            await secretProvider.Initialize();
+            
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

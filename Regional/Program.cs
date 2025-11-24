@@ -1,13 +1,29 @@
+using Api.Grpc;
+using Api.Secrets;
 using Regional.Database;
+using Regional.Services;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace Regional;
 
 public class Program {
-    public static void Main(string[] args) {
+    public static async Task Main(string[] args) {
+        var secretProvider = new SecretProvider();
+        await secretProvider.Initialize();
+        
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
+        builder.Services.AddFusionCache().TryWithAutoSetup();
         builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RemoteJwtPolicy", policy =>
+                policy.Requirements.Add(new RemoteJwtRequirement()));
+        });
+        builder.Services.AddGrpcClient<AuthValidationService.AuthValidationServiceClient>(o => {
+            o.Address = new Uri(builder.Configuration["MainServerConnection:Url"] ?? throw new InvalidOperationException());
+        });
         builder.Services.AddDbContext<RegionalDbContext>();
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

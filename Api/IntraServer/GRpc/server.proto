@@ -7,14 +7,12 @@ service AuthValidationService {
 }
 
 message ValidateRequest {
-  string id = 1;
-  string token = 2;
+  string token = 1;
 }
 
 message ValidateResult {
-  bool is_valid = 1;
-  string user_id = 2;
-  string roles = 3;
-  string message = 4;
-  int64 expires_at = 5;
+  string user_id = 1;
+  string role = 2;
+  int64 expires_at = 3;
+  repeated string claims = 4;
 }

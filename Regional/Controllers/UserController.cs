@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Regional.DTO;
 
@@ -11,6 +12,7 @@ public class UserController : ControllerBase {
         throw new NotImplementedException();
     }
 
+    [Authorize]
     [HttpPost("timeout/vote")]
     public async Task<IActionResult> VoteTimeoutUser(VoteTimeoutUserDto dto) {
         throw new NotImplementedException();

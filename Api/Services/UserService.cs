@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Api.DAL;
 using Api.Database.Models;
@@ -60,13 +62,9 @@ public class UserService {
             var pass = PasswordGenerator.GeneratePassword(_globalSettings.Admin);
             user.PasswordHash = Hasher.Current.Hash(pass);
             (await _user.Add(user)).ThrowIfInvalid();
-            var jwt = _jwt.Create(user
-              , new {
-                    Expire = TimeSpan.FromMinutes(
-                        _globalSettings.Admin.CreateAccountTokenExpireInMinute
-                     ?? _globalSettings.Jwt.TokenExpireInMinute)
-                }
-            );
+            await _user.Load(user, u => u.Role);
+            
+            var jwt = _jwt.Create(new (user.Id.ToString(), user.Name, user.Role.Name));
 
             // (await _email.Send(new CreateAccountMail(new CreateAccountMailDto {
             //     Id = user.Id.ToString(), Username = dto.Username, Password = pass
